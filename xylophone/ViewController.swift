@@ -5,7 +5,7 @@ class ViewController: UIViewController {
     private var buttonList: [UIButton] = []
     private let buttonTextList = ["C", "D", "E", "F", "G", "A", "B"]
     private let buttonUIColorList: [UIColor] = [.red, .orange, .yellow, .green, .systemBlue, .blue, .purple]
-    private var audioPlayers: [String: AVAudioPlayer] = [:] // Dictionary to store preloaded audio players
+    private var audioPlayers: [String: AVAudioPlayer] = [:]
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
 
     override func viewDidLoad() {
@@ -95,11 +95,11 @@ class ViewController: UIViewController {
     public func playSound(_ title: String) {
         if let player = audioPlayers[title] {
             if player.isPlaying {
-                player.stop() // Mevcut oynatmayı durdurun
+                player.stop()
                 print("durduruldu")
             }
-            player.currentTime = 0 // Oynatıcıyı başa alın
-            player.play() // Sesi çalın
+            player.currentTime = 0
+            player.play()
         }
     }
 
