@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     private var buttonList: [UIButton] = []
-    private let buttonTextList = ["C", "D", "D", "E", "F", "G", "A", "B"]
+    private let buttonTextList = ["C", "D", "E", "F", "G", "A", "B"]
     private let buttonUIColorList: [UIColor] = [.red, .orange, .yellow, .green, .systemBlue, .blue, .purple]
     private var player: AVAudioPlayer!
     private let feedbackGenerator = UIImpactFeedbackGenerator()
@@ -66,7 +66,7 @@ class ViewController: UIViewController {
         button.backgroundColor = color
         button.layer.cornerRadius = 20
         button.tintColor = .white
-        button.titleLabel?.font = UIFont(name: "Bradley Hand", size: 40)
+        button.titleLabel?.font = UIFont(name: "Bradley Hand", size: 45)
 
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
 
@@ -92,7 +92,7 @@ class ViewController: UIViewController {
 
     @objc private func buttonPressed(_ sender: UIButton) {
         if let buttonIndex = buttonList.firstIndex(of: sender) {
-            print("Button \(buttonIndex + 1) tapped")
+            print("Button \(sender.currentTitle!) tapped")
             feedbackGenerator.impactOccurred()
             playSound(sender.currentTitle!)
         }
