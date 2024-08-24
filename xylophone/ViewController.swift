@@ -6,12 +6,13 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
-    
-    private let buttonList: [UIButton] = []
-    private let buttonTextList = ["C","D","D","E","F","G","A","B"]
-    private let buttonUIColorList : [UIColor] = [.red,.orange,.yellow,.green,.systemBlue,.blue,.purple]
+    private var buttonList: [UIButton] = []
+    private let buttonTextList = ["C", "D", "D", "E", "F", "G", "A", "B"]
+    private let buttonUIColorList: [UIColor] = [.red, .orange, .yellow, .green, .systemBlue, .blue, .purple]
+    private var player: AVAudioPlayer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,18 +21,35 @@ class ViewController: UIViewController {
         setupStackViewWithButtons()
     }
     
-    public func setupStackViewWithButtons(){
+    public func setupStackViewWithButtons() {
         let stackView = createStackView()
         
         view.addSubview(stackView)
         
         setupStackViewConstraints(stackView: stackView)
         
-        for i in 0...6{
-            print(i)
+        for i in 0 ... 6 {
             let button = createButton(title: buttonTextList[i], color: buttonUIColorList[i])
-            stackView.addArrangedSubview(button)
+            let view = createUIView(index: i, button: button)
+            buttonList.append(button)
+            stackView.addArrangedSubview(view)
         }
+    }
+    
+    public func createUIView(index: Int, button: UIButton) -> UIView {
+        let view = UIView()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear // Görünüm arka plan rengini ayarlayabilirsiniz
+        
+        view.addSubview(button)
+        
+        
+        
+        NSLayoutConstraint.activate([
+            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(index * 6)),
+            button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-(index * 6)))
+        ])
+        return view
         
     }
     
@@ -40,7 +58,7 @@ class ViewController: UIViewController {
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.alignment = .fill
-        stackView.spacing = 10
+        stackView.spacing = 20
         return stackView
     }
     
@@ -48,28 +66,42 @@ class ViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.backgroundColor = color
-        button.layer.cornerRadius = 5
+        button.layer.cornerRadius = 20
         button.tintColor = .white
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 30)
+        button.titleLabel?.font = UIFont(name: "Bradley Hand", size: 40)
+        
+        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         
         return button
     }
     
-    public func setupStackViewConstraints (stackView: UIStackView){
+    public func setupStackViewConstraints(stackView: UIStackView) {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
         ])
     }
     
+    public func playSound(_ title:String) {
+        let url = Bundle.main.url(forResource: title, withExtension: "wav")
+        player = try! AVAudioPlayer(contentsOf: url!)
+        player.play()
+    }
+    
+    @objc private func buttonPressed(_ sender: UIButton){
+        if let buttonIndex = buttonList.firstIndex(of: sender) {
+            print("Button \(buttonIndex + 1) tapped")
+            playSound(sender.currentTitle!)
+        }
+    }
 }
 
-extension UIColor{
-    convenience init(hex: String){
+extension UIColor {
+    convenience init(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
         
