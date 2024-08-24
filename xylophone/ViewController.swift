@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        view.backgroundColor = UIColor(hex: "346FE6BE")
+        view.backgroundColor = UIColor(hex: "FFFFFF")
         setupStackViewWithButtons()
     }
 
