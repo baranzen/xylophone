@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     private var buttonList: [UIButton] = []
     private let buttonTextList = ["C", "D", "E", "F", "G", "A", "B"]
     private let buttonUIColorList: [UIColor] = [.red, .orange, .yellow, .green, .systemBlue, .blue, .purple]
-    private var player: AVAudioPlayer!
+    private var player: AVAudioPlayer?
     private let feedbackGenerator = UIImpactFeedbackGenerator()
 
     override func viewDidLoad() {
@@ -91,11 +91,11 @@ class ViewController: UIViewController {
     public func playSound(_ title: String) {
         let url = Bundle.main.url(forResource: title, withExtension: "wav")
         player = try! AVAudioPlayer(contentsOf: url!)
-        player.play()
+        player?.play()
     }
 
     @objc private func buttonPressed(_ sender: UIButton) {
-        if let buttonIndex = buttonList.firstIndex(of: sender) {
+        if buttonList.firstIndex(of: sender) != nil {
             print("Button \(sender.currentTitle!) tapped")
             feedbackGenerator.impactOccurred()
             playSound(sender.currentTitle!)
