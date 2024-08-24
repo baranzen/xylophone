@@ -6,35 +6,36 @@ class ViewController: UIViewController {
     private let buttonTextList = ["C", "D", "E", "F", "G", "A", "B"]
     private let buttonUIColorList: [UIColor] = [.red, .orange, .yellow, .green, .systemBlue, .blue, .purple]
     private var audioPlayers: [String: AVAudioPlayer] = [:] // Dictionary to store preloaded audio players
-    private let feedbackGenerator = UIImpactFeedbackGenerator()
-    
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: "FFFFFF")
+        view.backgroundColor = .systemBackground
         setupStackViewWithButtons()
         preloadSounds() // Preload sounds in viewDidLoad
+        feedbackGenerator.prepare()
     }
-    
+
     public func setupStackViewWithButtons() {
         let stackView = createStackView()
         view.addSubview(stackView)
         setupStackViewConstraints(stackView: stackView)
-        
-        for i in 0...6 {
+
+        for i in 0 ... 6 {
             let button = createButton(title: buttonTextList[i], color: buttonUIColorList[i])
             let view = createUIView(index: i, button: button)
             buttonList.append(button)
             stackView.addArrangedSubview(view)
         }
     }
-    
+
     public func createUIView(index: Int, button: UIButton) -> UIView {
         let uiView = UIView()
         button.translatesAutoresizingMaskIntoConstraints = false
         uiView.backgroundColor = .clear
-        
+
         uiView.addSubview(button)
-        
+
         NSLayoutConstraint.activate([
             button.centerXAnchor.constraint(equalTo: uiView.centerXAnchor),
             button.centerYAnchor.constraint(equalTo: uiView.centerYAnchor),
@@ -45,7 +46,7 @@ class ViewController: UIViewController {
         ])
         return uiView
     }
-    
+
     public func createStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -54,7 +55,7 @@ class ViewController: UIViewController {
         stackView.spacing = 30
         return stackView
     }
-    
+
     public func createButton(title: String, color: UIColor) -> UIButton {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
@@ -65,10 +66,10 @@ class ViewController: UIViewController {
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         return button
     }
-    
+
     public func setupStackViewConstraints(stackView: UIStackView) {
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -76,7 +77,7 @@ class ViewController: UIViewController {
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
         ])
     }
-    
+
     public func preloadSounds() {
         for sound in buttonTextList {
             if let url = Bundle.main.url(forResource: sound, withExtension: "wav") {
@@ -90,14 +91,18 @@ class ViewController: UIViewController {
             }
         }
     }
-    
+
     public func playSound(_ title: String) {
         if let player = audioPlayers[title] {
-            player.currentTime = 0 // Reset the player to the beginning
-            player.play()
+            if player.isPlaying {
+                player.stop() // Mevcut oynatmayı durdurun
+                print("durduruldu")
+            }
+            player.currentTime = 0 // Oynatıcıyı başa alın
+            player.play() // Sesi çalın
         }
     }
-    
+
     @objc private func buttonPressed(_ sender: UIButton) {
         if let title = sender.currentTitle {
             print("Button \(title) tapped")
@@ -111,15 +116,15 @@ extension UIColor {
     convenience init(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
-        
+
         var rgb: UInt64 = 0
         Scanner(string: hexSanitized).scanHexInt64(&rgb)
-        
+
         let red = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
         let green = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
         let blue = CGFloat(rgb & 0x0000FF) / 255.0
         let alpha = CGFloat(1.0)
-        
+
         self.init(red: red, green: green, blue: blue, alpha: alpha)
     }
 }
