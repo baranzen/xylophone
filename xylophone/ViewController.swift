@@ -38,17 +38,21 @@ class ViewController: UIViewController {
     }
 
     public func createUIView(index: Int, button: UIButton) -> UIView {
-        let view = UIView()
+        let uiView = UIView()
         button.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear // Görünüm arka plan rengini ayarlayabilirsiniz
+        uiView.backgroundColor = .clear // Görünüm arka plan rengini ayarlayabilirsiniz
 
-        view.addSubview(button)
+        uiView.addSubview(button)
 
         NSLayoutConstraint.activate([
-            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CGFloat(index * 6)),
-            button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CGFloat(-(index * 6))),
+            button.centerXAnchor.constraint(equalTo: uiView.centerXAnchor),
+            button.centerYAnchor.constraint(equalTo: uiView.centerYAnchor),
+            button.bottomAnchor.constraint(equalTo: uiView.bottomAnchor),
+            button.topAnchor.constraint(equalTo: uiView.topAnchor),
+            button.leadingAnchor.constraint(equalTo: uiView.leadingAnchor, constant: CGFloat(index * 6)),
+            button.trailingAnchor.constraint(equalTo: uiView.trailingAnchor, constant: CGFloat(-(index * 6))),
         ])
-        return view
+        return uiView
     }
 
     public func createStackView() -> UIStackView {
@@ -56,7 +60,7 @@ class ViewController: UIViewController {
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.alignment = .fill
-        stackView.spacing = 20
+        stackView.spacing = 30
         return stackView
     }
 
